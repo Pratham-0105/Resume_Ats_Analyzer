@@ -12,16 +12,14 @@ import '../models/section_score.dart';
 /// Service that connects to a local Ollama instance to provide genuine,
 /// in-depth, ATS-standard resume evaluation matched against job descriptions.
 class OllamaService {
-  /// Default endpoint. On Android Emulator, 10.0.2.2 maps to the host machine's localhost.
-  static String get defaultBaseUrl {
-    if (kIsWeb) return 'http://localhost:11434';
-    return Platform.isAndroid ? 'http://10.0.2.2:11434' : 'http://localhost:11434';
-  }
+  /// Default endpoint. Points to the live Render cloud backend for universal mobile access.
+  static String get defaultBaseUrl =>
+      'https://smart-resume-backend-jt2d.onrender.com';
 
-  /// Current base URL for Ollama. Can be updated dynamically from the UI for physical phones.
+  /// Current base URL for Ollama / Cloud ATS backend. Can be updated dynamically from the UI.
   static String baseUrl = defaultBaseUrl;
 
-  /// Default model to use. 'llama3.2' is lightweight (~2GB), very fast, and produces high quality analysis.
+  /// Default model to use.
   static String model = 'llama3.2';
 
   static const bool kIsWeb = bool.fromEnvironment('dart.library.js_util');
@@ -38,8 +36,8 @@ class OllamaService {
     baseUrl = clean;
   }
 
-  /// Checks if the Ollama server is up and responsive.
-  static Future<bool> isOllamaRunning({Duration timeout = const Duration(seconds: 3)}) async {
+  /// Checks if the Ollama / Cloud server is up and responsive.
+  static Future<bool> isOllamaRunning({Duration timeout = const Duration(seconds: 8)}) async {
     try {
       final uri = Uri.parse('$baseUrl/api/tags');
       final res = await http.get(uri).timeout(timeout);

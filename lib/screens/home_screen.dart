@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                         ),
                                         SizedBox(width: 6),
                                         Text(
-                                          'OLLAMA READY',
+                                          'CLOUD AI READY',
                                           style: TextStyle(
                                             color: Color(0xFF6B21A8),
                                             fontSize: 10,
@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                       spacing: 8,
                                       runSpacing: 8,
                                       children: [
-                                        _heroFeaturePill(Icons.lock_outline, '100% Offline'),
+                                        _heroFeaturePill(Icons.cloud_done_outlined, 'Render Cloud AI'),
                                         _heroFeaturePill(Icons.speed_rounded, 'Llama 3.2 AI'),
                                         _heroFeaturePill(Icons.grading_rounded, 'ATS Out of 100'),
                                       ],
