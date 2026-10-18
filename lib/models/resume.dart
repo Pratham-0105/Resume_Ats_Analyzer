@@ -13,6 +13,11 @@ class Resume {
   final File? file;
   final Major? major;
   final int score;
+  final int atsScore;
+  final String? jobDescription;
+  final List<String> matchedKeywords;
+  final List<String> missingKeywords;
+  final String? roleFitSummary;
   final List<String> feedback;
   final List<SectionScore> sectionBreakdown;
   final Map<String, String> parsedSections;
@@ -25,12 +30,20 @@ class Resume {
     this.file,
     this.major,
     this.score = 0,
+    int? atsScore,
+    this.jobDescription,
+    List<String>? matchedKeywords,
+    List<String>? missingKeywords,
+    this.roleFitSummary,
     List<String>? feedback,
     List<SectionScore>? sectionBreakdown,
     Map<String, String>? parsedSections,
     Map<String, int>? sectionOffsets,
     bool enableLogging = false,
-  })  : feedback = feedback ?? [],
+  })  : atsScore = atsScore ?? score,
+        matchedKeywords = matchedKeywords ?? [],
+        missingKeywords = missingKeywords ?? [],
+        feedback = feedback ?? [],
         sectionBreakdown = sectionBreakdown ?? [],
         parsedSections = parsedSections ?? {},
         sectionOffsets = sectionOffsets ?? {} {
@@ -70,6 +83,11 @@ class Resume {
     File? file,
     Major? major,
     int? score,
+    int? atsScore,
+    String? jobDescription,
+    List<String>? matchedKeywords,
+    List<String>? missingKeywords,
+    String? roleFitSummary,
     List<String>? feedback,
     List<SectionScore>? sectionBreakdown,
     Map<String, String>? parsedSections,
@@ -82,6 +100,15 @@ class Resume {
       file: file ?? this.file,
       major: major ?? this.major,
       score: score ?? this.score,
+      atsScore: atsScore ?? this.atsScore,
+      jobDescription: jobDescription ?? this.jobDescription,
+      matchedKeywords: matchedKeywords != null
+          ? List.from(matchedKeywords)
+          : List.from(this.matchedKeywords),
+      missingKeywords: missingKeywords != null
+          ? List.from(missingKeywords)
+          : List.from(this.missingKeywords),
+      roleFitSummary: roleFitSummary ?? this.roleFitSummary,
       feedback: feedback != null ? List.from(feedback) : List.from(this.feedback),
       sectionBreakdown: sectionBreakdown != null
           ? List.from(sectionBreakdown)

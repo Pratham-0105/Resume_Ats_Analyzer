@@ -40,14 +40,16 @@ class AnimatedGradientBackground extends StatefulWidget {
   const AnimatedGradientBackground({
     super.key,
     this.colors = const [
-      Color(0xFFB0B9BF),
-      Color(0xFFB2C8DA),
-      Color(0xFF95B6D1),
+      Color(0xFFFAF5FF), // Soft Lilac Snow
+      Color(0xFFF3E8FF), // Pastel Lavender
+      Color(0xFFEDE9FE), // Soft Amethyst Mist
+      Color(0xFFE9D5FF), // Dreamy Violet Glow
+      Color(0xFFDDD6FE), // Silk Orchid
     ],
     this.stops,
     this.beginAlignment = Alignment.topLeft,
     this.endAlignment = Alignment.bottomRight,
-    this.duration = const Duration(seconds: 10),
+    this.duration = const Duration(seconds: 9),
     this.curve = Curves.easeInOut,
   });
 

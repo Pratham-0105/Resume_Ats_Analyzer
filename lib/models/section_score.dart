@@ -42,17 +42,14 @@ class SectionScore {
   /// - [ArgumentError] If [sectionName] is empty, [maxScore] is not positive, or
   ///   [achievedScore] is negative or exceeds [maxScore].
   SectionScore({
-    required String sectionName,
-    required int maxScore,
-    required int achievedScore,
+    required this.sectionName,
+    required this.maxScore,
+    required this.achievedScore,
     required List<String> feedback,
     List<String>? matchedContent,
     String? rawContent,
     bool enableLogging = false,
-  })  : sectionName = sectionName,
-        maxScore = maxScore,
-        achievedScore = achievedScore,
-        feedback = List.unmodifiable(feedback),
+  })  : feedback = List.unmodifiable(feedback),
         matchedContent = List.unmodifiable(matchedContent ?? []),
         rawContent = rawContent ?? '' {
     // Validate inputs

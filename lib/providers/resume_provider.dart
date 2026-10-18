@@ -52,9 +52,21 @@ class ResumeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _jobDescription = '';
+
+  /// The target job description to match against.
+  String get jobDescription => _jobDescription;
+
+  /// Update the target job description.
+  void setJobDescription(String jd) {
+    _jobDescription = jd;
+    notifyListeners();
+  }
+
   /// Reset everything back to a brand-new, empty resume.
   void clearResume() {
     _resume = Resume.empty();
+    _jobDescription = '';
     notifyListeners();
   }
 }

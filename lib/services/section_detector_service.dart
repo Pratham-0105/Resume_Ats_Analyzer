@@ -28,7 +28,7 @@ class SectionDetectorService {
     void flush(String current, StringBuffer buf) {
       final content = buf.toString().trim();
       if (content.isNotEmpty) {
-        out[current] = (out[current]! + '\n' + content).trim();
+        out[current] = ('${out[current]!}\n$content').trim();
         if (enableLogging) {
           developer.log('Flushed to [$current]: ${content.length} chars');
         }

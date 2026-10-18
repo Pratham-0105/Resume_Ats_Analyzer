@@ -6,13 +6,16 @@ import '../models/section_score.dart';
 import '../models/major.dart';
 import '../services/section_detector_service.dart';
 import '../services/major_detector.dart';
+import '../services/ollama_service.dart';
 import '../utils/scoring_rules.dart';
 
 /// A service that orchestrates resume analysis:
-/// 1. Splits text into sections via [SectionDetectorService].
-/// 2. Detects the applicant’s [Major] via [MajorDetector].
-/// 3. Computes per‐section scores based on [ScoringRules].
-/// 4. Aggregates into a final 0–100 score and produces feedback.
+/// 1. Attempts genuine AI evaluation via local [OllamaService].
+/// 2. If Ollama is offline, gracefully falls back to rule-based scoring:
+///    - Splits text into sections via [SectionDetectorService].
+///    - Detects the applicant’s [Major] via [MajorDetector].
+///    - Computes per‐section scores based on [ScoringRules].
+///    - Aggregates into a final 0–100 score and produces feedback.
 class ScoringService {
   static const int _maxTextLength = 100 * 1024; // 100 KB
 
@@ -30,7 +33,11 @@ class ScoringService {
   /// enriched with score, major, section breakdown, and feedback.
   ///
   /// Throws [ArgumentError] if the input is empty or too large.
-  static Resume analyze(Resume input, {bool enableLogging = false}) {
+  static Future<Resume> analyze(
+    Resume input, {
+    String? jobDescription,
+    bool enableLogging = false,
+  }) async {
     final rawText = input.fullText;
     if (rawText.isEmpty) {
       throw ArgumentError('Resume text cannot be empty.');
@@ -40,6 +47,42 @@ class ScoringService {
         'Resume text exceeds maximum of $_maxTextLength characters.',
       );
     }
+
+    // 1) Try Genuine AI Analysis via local Ollama
+    final bool aiRunning = await OllamaService.isOllamaRunning();
+    if (aiRunning) {
+      try {
+        if (enableLogging) {
+          developer.log('Ollama is reachable. Running deep AI ATS resume analysis...');
+        }
+        return await OllamaService.analyzeResume(
+          input,
+          jobDescription: jobDescription,
+          enableLogging: enableLogging,
+        );
+      } catch (e, stack) {
+        if (enableLogging) {
+          developer.log('Ollama analysis failed, falling back to rule engine: $e\n$stack');
+        }
+      }
+    }
+
+    // 2) Fallback to rule-based analysis
+    return _analyzeRuleBased(
+      input,
+      jobDescription: jobDescription,
+      enableLogging: enableLogging,
+      wasAiOffline: !aiRunning,
+    );
+  }
+
+  static Resume _analyzeRuleBased(
+    Resume input, {
+    String? jobDescription,
+    bool enableLogging = false,
+    bool wasAiOffline = false,
+  }) {
+    final rawText = input.fullText;
 
     // 1) Section detection
     final detected = SectionDetectorService.detectSections(
@@ -118,10 +161,19 @@ class ScoringService {
       );
     }
 
+    if (wasAiOffline) {
+      feedback.insert(
+        0,
+        '⚠️ Ollama is offline. Evaluated using offline rule engine. Start Ollama for deep AI analysis.',
+      );
+    }
+
     // 8) Return enriched resume
     return input.copyWith(
       score: normalized,
+      atsScore: normalized,
       major: major,
+      jobDescription: jobDescription,
       feedback: feedback,
       sectionBreakdown: breakdown,
     );

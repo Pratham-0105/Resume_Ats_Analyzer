@@ -3,12 +3,15 @@
     android:versionName="1.0">
     <!-- Declare camera permission to allow runtime permission requests -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Internet permission for AI API / Ollama requests -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Specify that the camera hardware is optional for the app -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:label="smart_resume_analyzer"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <activity
             android:name="com.example.smart_resume_analyzer.MainActivity"
             android:exported="true"

@@ -29,16 +29,16 @@ class ScanningAnimation extends StatefulWidget {
   final bool dimBackground;
 
   const ScanningAnimation({
-    Key? key,
+    super.key,
     this.duration = const Duration(seconds: 3),
     this.beamHeight = 30.0,
     this.beamColor = Colors.white,
     this.enableShimmer = true,
     this.dimBackground = true,
-  }) : super(key: key);
+  });
 
   @override
-  _ScanningAnimationState createState() => _ScanningAnimationState();
+  State<ScanningAnimation> createState() => _ScanningAnimationState();
 }
 
 class _ScanningAnimationState extends State<ScanningAnimation>
@@ -96,7 +96,7 @@ class _ScanningAnimationState extends State<ScanningAnimation>
                 // Optional dimming of background
                 if (widget.dimBackground)
                   Positioned.fill(
-                    child: Container(color: Colors.black.withOpacity(0.2)),
+                    child: Container(color: Colors.black.withValues(alpha: 0.2)),
                   ),
 
                 // Soft blur behind the beam
@@ -125,17 +125,17 @@ class _ScanningAnimationState extends State<ScanningAnimation>
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                           colors: [
-                            centerColor.withOpacity(0.0),
-                            edgeColor.withOpacity(0.5),
-                            centerColor.withOpacity(0.9),
-                            edgeColor.withOpacity(0.5),
-                            centerColor.withOpacity(0.0),
+                            centerColor.withValues(alpha: 0.0),
+                            edgeColor.withValues(alpha: 0.5),
+                            centerColor.withValues(alpha: 0.9),
+                            edgeColor.withValues(alpha: 0.5),
+                            centerColor.withValues(alpha: 0.0),
                           ],
                           stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: centerColor.withOpacity(0.6 * shimmer),
+                            color: centerColor.withValues(alpha: 0.6 * shimmer),
                             blurRadius: 24,
                             spreadRadius: 8,
                           ),
